@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Records</title>
+    <style>
+      .buttons {
+        margin: 20px 0;
+      }
+      button {
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!------------------------HEADER----------------------------------->
+    <h1>Welcome, <%= userType %> <%= username %>!</h1>
+
+    <form action="/logout?_method=DELETE" method="POST">
+      <div>
+        <button type="submit">Log out</button>
+      </div>
+    </form>
+
+    <!---------------BUTTONS------------------------------------------->
+    <div class="buttons">
+      <button onclick="window.location.href='/records/download'">Download CSV</button>
+      <button onclick="printTable()">Print CSV</button>
+    </div>
+
+    <!---------------TABLE--------------------------------------------------->
+    <table id="recordsTable">
+      <thead>
+        <tr>
+          <th>Transaction ID</th>
+          <th>Patiant name</th>
+          <th>Representative name</th>
+          <th>Relationship</th>
+          <th>Patient gender</th>
+          <th>Patient Age</th>
+          <th>Contact no.</th>
+          <th>Address</th>
+          <th>Medicine</th>
+          <th>Brand</th>
+          <th>Quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (viewListPatientsRecords && viewListPatientsRecords.length > 0) { %>
+        <% viewListPatientsRecords.forEach(item => { %>
+        <tr>
+          <td><%= item.rq_id %></td>
+          <td><%= item.pt_name %></td>
+          <td><%= item.rp_name %></td>
+          <td><%= item.rp_relationship %></td>
+          <td><%= item.pt_gender %></td>
+          <td><%= item.pt_age %></td>
+          <td><%= item.pt_contact %></td>
+          <td><%= item.pt_address %></td>
+          <td><%= item.item_name %></td>
+          <td><%= item.brand %></td>
+          <td><%= item.quantity %></td>
+        </tr>
+        <% }) %>
+        <% } else { %>
+        <tr>
+          <td colspan="11">No items found.</td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <script>
+      function printTable() {
+        const table = document.getElementById('recordsTable').outerHTML;
+        const newWindow = window.open('', '', 'width=800,height=600');
+        newWindow.document.write('<html><head><title>Print CSV</title></head><body>');
+        newWindow.document.write(table);
+        newWindow.document.write('</body></html>');
+        newWindow.document.close();
+        newWindow.print();
+      }
+    </script>
+  </body>
+</html>

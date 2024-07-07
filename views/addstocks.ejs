@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add stocks</title>
+</head>
+<body>
+
+    <!------------------------HEADER----------------------------------->
+    <h1>Welcome, <%= userType %> <%= username %>!</h1>
+
+    <form action="/logout?_method=DELETE" method="POST">
+        <div> 
+          <button type="submit">Log out</button>
+        </div>
+    </form>
+<!-----------------------------ADDING STOCKS-------------------------------------->
+    <form action="/addstocks" method="post">
+      <input type="text" name="itemName" placeholder="Item name">
+      <input type="text" name="brand" placeholder="Brand name">
+      <input type="text" name="manufacturer" placeholder="Manufacturer">
+      <input type="text" name="dosage" placeholder="Dosage">
+      <input type="date" name="expiration" placeholder="Date">
+      <input type="number" name="quantity" placeholder="Quantity">
+      <button type="submit">Save</button>
+    </form>
+
+    <!---------------TABLE--------------------------------------------------->
+    <table>
+      <thead>
+        <tr>
+          <th>Item Name</th>
+          <th>Brand Name</th>
+          <th>Manufacturer</th>
+          <th>Dosage</th>
+          <th>Expiration</th>
+          <th>Quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (viewList && viewList.length > 0) { %> <% viewList.forEach(item =>
+        { %>
+        <tr>
+          <td><%= item.itemName %></td>
+          <td><%= item.brand %></td>
+          <td><%= item.manufacturer %></td>
+          <td><%= item.dosage %></td>
+          <td><%= item.expiration %></td>
+          <td><%= item.quantity %></td>
+        </tr>
+        <% }) %> <% } else { %>
+        <tr>
+          <td colspan="6">No items found.</td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+
+</body>
+</html>

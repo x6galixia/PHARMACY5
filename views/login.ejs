@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css"
+    />
+    <title>Login</title>
+  </head>
+  <body>
+    <form action="login" method="POST">
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+        "
+      >
+        <div style="text-align: center">
+          <div>
+            <% if (messages.error) { %>
+            <div><%= messages.error %></div>
+            <% } %>
+            <label for="username">Username</label>
+            <input type="text" name="username" required />
+          </div>
+          <div>
+            <label for="password">Password</label>
+            <input type="password" name="password" required />
+          </div>
+          <div>
+            <button type="submit">Login</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </body>
+</html>

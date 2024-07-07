@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dispense</title>
+  <style>
+    /* Styling for modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-content {
+      margin: 10% auto;
+      padding: 20px;
+      background-color: #fefefe;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .modal-img {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+
+  <script>
+    // JavaScript for modal functionality
+    function openModal(imgSrc) {
+      const modal = document.getElementById("myModal");
+      const modalImg = document.getElementById("modalImg");
+
+      modal.style.display = "block";
+      modalImg.src = imgSrc;
+    }
+
+    function closeModal() {
+      const modal = document.getElementById("myModal");
+      modal.style.display = "none";
+    }
+
+    // Close modal when clicking outside of the image
+    window.onclick = function (event) {
+      const modal = document.getElementById("myModal");
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    };
+
+    function fillInputs(
+      rq_id,
+      pt_name,
+      pt_age,
+      pt_gender,
+      pt_contact,
+      pt_address,
+      pt_prescription,
+      rp_name,
+      rp_relationship
+    ) {
+      document.querySelector('input[name="rq_id"]').value = rq_id;
+      document.querySelector('input[name="pt_name"]').value = pt_name;
+      document.querySelector('input[name="pt_gender"]').value = pt_gender;
+      document.querySelector('input[name="pt_age"]').value = pt_age;
+      document.querySelector('input[name="pt_contact"]').value = pt_contact;
+      document.querySelector('input[name="pt_address"]').value = pt_address;
+      document.querySelector('input[name="rp_name"]').value = rp_name;
+      document.querySelector('input[name="rp_relationship"]').value = rp_relationship;
+      document.getElementById("pt_prescription_display").src = "/uploads/" + pt_prescription;
+    }
+
+    function attachRowClickHandlers() {
+      const rows = document.querySelectorAll("tbody tr");
+      rows.forEach((row) => {
+        row.addEventListener("click", () => {
+          const rq_id = row.getAttribute("data-rq_id");
+          const pt_name = row.getAttribute("data-pt_name");
+          const pt_age = row.getAttribute("data-pt_age");
+          const pt_gender = row.getAttribute("data-pt_gender");
+          const pt_contact = row.getAttribute("data-pt_contact");
+          const pt_address = row.getAttribute("data-pt_address");
+          const pt_prescription = row.getAttribute("data-pt_prescription");
+          const rp_name = row.getAttribute("data-rp_name");
+          const rp_relationship = row.getAttribute("data-rp_relationship");
+
+          fillInputs(
+            rq_id,
+            pt_name,
+            pt_age,
+            pt_gender,
+            pt_contact,
+            pt_address,
+            pt_prescription,
+            rp_name,
+            rp_relationship
+          );
+        });
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", attachRowClickHandlers);
+
+    // Function to add more medicine fields
+    function addMedicineFields() {
+      const container = document.getElementById("medicine-fields-container");
+      const medicineFields = document.createElement("div");
+      medicineFields.className = "medicine-fields";
+      medicineFields.innerHTML = `
+        <input type="text" name="item_name" placeholder="Medicine name" required>
+        <input type="text" name="brand" placeholder="Brand name" required>
+        <input type="number" name="quantity" placeholder="Quantity" required>
+      `;
+      container.appendChild(medicineFields);
+    }
+  </script>
+</head>
+<body>
+  <h1>Welcome, <%= userType %> <%= username %>!</h1>
+  <!-----------------------------LOGOUT--------------------------->
+  <form action="/logout?_method=DELETE" method="POST">
+    <button type="submit">Log out</button>
+  </form>
+  <!----------------------------------SEARCH------------------------->
+  <form action="/search-name" method="post">
+    <input type="text" name="search" placeholder="Search name" />
+    <button type="submit">Search</button>
+  </form>
+
+  <!---------------------REQUEST TABLE-------------------------------- -->
+  <table>
+    <thead>
+      <tr>
+        <th>Patient Name</th>
+        <th>Receiver Name</th>
+        <th>Relationship</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (viewAllRequests && viewAllRequests.length > 0) { %> <%
+      viewAllRequests.forEach(item => { %>
+      <tr
+        data-rq_id="<%= item.rq_id %>"
+        data-pt_name="<%= item.pt_name %>"
+        data-pt_age="<%= item.pt_age %>"
+        data-pt_gender="<%= item.pt_gender %>"
+        data-pt_contact="<%= item.pt_contact %>"
+        data-pt_address="<%= item.pt_address %>"
+        data-pt_prescription="<%= item.pt_prescription %>"
+        data-rp_name="<%= item.rp_name %>"
+        data-rp_relationship="<%= item.rp_relationship %>"
+      >
+        <td><%= item.pt_name %></td>
+        <td><%= item.rp_name %></td>
+        <td><%= item.rp_relationship %></td>
+        <td>
+          <button onclick="openModal('/uploads/<%= item.pt_prescription %>')">
+            View Prescription
+          </button>
+        </td>
+      </tr>
+      <% }) %> <% } else { %>
+      <tr>
+        <td colspan="4">No items found.</td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <!-- Modal for displaying image -->
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <img id="modalImg" class="modal-img" />
+    </div>
+  </div>
+
+  <!-------------------------------------DISPLAYING THE INVENTORY------------------------->
+  <h1>Medicine list</h1>
+  <form action="/search-medicine" method="post">
+    <input type="text" name="search" placeholder="Search medicine" />
+    <button type="submit">Search</button>
+  </form>
+
+  <div>
+    <table>
+      <thead>
+        <tr>
+          <th>Item Name</th>
+          <th>Brand Name</th>
+          <th>Manufacturer</th>
+          <th>Dosage</th>
+          <th>Expiration</th>
+          <th>Quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (viewList && viewList.length > 0) { %> <%
+        viewList.forEach(item => { %>
+        <tr>
+          <td><%= item.itemName %></td>
+          <td><%= item.brand %></td>
+          <td><%= item.manufacturer %></td>
+          <td><%= item.dosage %></td>
+          <td><%= item.expiration %></td>
+          <td><%= item.quantity %></td>
+        </tr>
+        <% }) %> <% } else { %>
+        <tr>
+          <td colspan="6">No items found.</td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Display of Patient Information -->
+  <h1>Patient Information</h1>
+  <div class="patient-details">
+    <form action="/records" method="post">
+      <!-- Patient info -->
+      <input type="text" name="rq_id" placeholder="rq_id" readonly />
+      <input type="text" name="pt_name" placeholder="Patient name" readonly />
+      <input type="text" name="rp_name" placeholder="Receiver name" readonly />
+      <input type="text" name="rp_relationship" placeholder="Relationship" readonly />
+      <input type="text" name="pt_gender" placeholder="Patient gender" readonly />
+      <input type="number" name="pt_age" placeholder="Patient age" readonly />
+      <input type="text" name="pt_contact" placeholder="Patient contact" readonly />
+      <input type="text" name="pt_address" placeholder="Patient address" readonly />
+
+      <!-- Display the prescription image -->
+      <img id="pt_prescription_display" src="" alt="Patient Prescription" onclick="openModal(this.src)" />
+
+      <!-- Medicines info -->
+      <h2>Medicine Info</h2>
+      <div id="medicine-fields-container">
+        <div class="medicine-fields">
+          <input type="text" name="item_name" placeholder="Medicine name" required>
+          <input type="text" name="brand" placeholder="Brand name" required>
+          <input type="number" name="quantity" placeholder="Quantity" required>
+        </div>
+      </div>
+      <button type="button" onclick="addMedicineFields()">Add more medicines</button>
+
+      <!-- Submit button -->
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</body>
+</html>

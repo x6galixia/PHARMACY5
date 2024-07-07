@@ -1,0 +1,7 @@
+CREATE TABLE inventory (
+	item_name VARCHAR(250) NOT NULL,
+	brand VARCHAR(250) NOT NULL,
+	expiration DATE NOT NULL,
+	quantity INT NOT NULL,
+	PRIMARY KEY (item_name, brand)
+);

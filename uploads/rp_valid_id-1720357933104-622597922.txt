@@ -1,0 +1,17 @@
+-- Create table
+CREATE TABLE users (
+	id SERIAL PRIMARY KEY NOT NULL,
+	name VARCHAR(200) NOT NULL,
+	username VARCHAR(100) UNIQUE NOT NULL,
+	password VARCHAR(200) NOT NULL,
+	user_type VARCHAR(200) NOT NULL
+);
+
+-- Inserting data
+INSERT INTO users (name, username, password, user_type)
+VALUES 
+	('kim', 'doctor', '1234', 'doctor'),
+	('jhondrex', 'medtech', '1234', 'medtech'),
+	('adrian', 'nurse', '1234', 'nurse'),
+	('chriza', 'pharmacist', '1234', 'pharmacist'),
+	('catalo', 'medofficer', '1234', 'medofficer');

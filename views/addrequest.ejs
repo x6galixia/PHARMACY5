@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Request</title>
+  </head>
+  <body>
+
+<!------------------------HEADER----------------------------------->
+<h1>Welcome, <%= userType %> <%= username %>!</h1>
+
+<form action="/logout?_method=DELETE" method="POST">
+    <div> 
+      <button type="submit">Log out</button>
+    </div>
+</form>
+<!--------------------------ADDING REQUEST------------------------------------->
+    <form action="/addrequest" method="POST" enctype="multipart/form-data">
+      <div>
+        <h1>PATIENTS INFORMATION</h1>
+        <input type="text" name="pt_name" placeholder="Name" required />
+        <input type="number" name="pt_age" placeholder="Age" required />
+        <input type="text" name="pt_gender" placeholder="Gender" required />
+        <input type="text" name="pt_contact" placeholder="Contact No" required />
+        <input type="text" name="pt_address" placeholder="Address" required />
+        <input type="file" name="pt_prescription" required/>
+
+        <h1>RECIPIENT INFORMATION</h1>
+        <input type="text" name="rp_name" placeholder="Name" required />
+        <input type="number" name="rp_age" placeholder="Age" required />
+        <input type="text" name="rp_relationship" placeholder="Relationship" required />
+        <input type="text" name="rp_contact" placeholder="Contact No" required />
+        <input type="text" name="rp_address" placeholder="Address" required />
+        <input type="file" name="rp_valid_id" required />
+      </div>
+      <div>
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+  </body>
+</html>
